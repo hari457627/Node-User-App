@@ -1,0 +1,11 @@
+{
+  "database":{
+    "url": "mongodb://localhost:27018/test"
+  },
+  "MODULE_KEY": "MODK:1bbe1f82-b1a7-45c5-aa9f-31c78542a45d",
+  "MODULE_CLIENT_KEY": "51240043-f88b-4b53-8512-bea9aa5b9a4f",
+  "MODULE_CLIENT_SECRET": "50k-app-secret",
+  "grant_type": "client_credentials",
+  "scope": "scope:oauth.token.verify"
+}
+

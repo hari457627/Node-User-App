@@ -1,0 +1,12 @@
+version: '2'
+services:
+  user:
+    build: .
+    image: user:0.1
+    command: /user/node_modules/.bin/nodemon /user/bin/www
+    ports:
+      - "4005:4000"
+    volumes:
+      - ./reports:/user/reports
+    stdin_open: true
+    tty: true
