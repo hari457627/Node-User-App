@@ -7,6 +7,15 @@ const saltRounds = 10;
 // var AuthentService = require('../../idn/AuthValidation');
 
 router.route('/')
+    .get(function (request, response) {
+      User.find().exec().then(function (user) {
+          response.json(user);
+      }).catch(function (error) {
+          response.status(500).json({error: error});
+      });
+    })
+
+router.route('/signup')
     .post(function(request, response) {
         bcrypt.hash(request.body.password,saltRounds, function(err,hash){
           request.body.password = hash;
@@ -16,13 +25,6 @@ router.route('/')
               response.json(error);
           })
         })
-    })
-    .get(function (request, response) {
-      User.find().exec().then(function (user) {
-          response.json(user);
-      }).catch(function (error) {
-          response.status(500).json({error: error});
-      });
     })
 
 router.route('/:id')
@@ -36,7 +38,6 @@ router.route('/:id')
     })
 
     .put(function(request, response) {
-        console.log(request.params.id);
         bcrypt.hash(request.body.password,saltRounds, function(err,hash){
           User.findOneAndUpdate({_id:request.params.id},request.body,{new:true}).then(function (user) {
             response.json(user);
@@ -47,7 +48,6 @@ router.route('/:id')
     })
 
     .delete(function(req, res) {
-      console.log(req.params.id);
       User.findByIdAndRemove(req.params.id, (err, todo) => {
       // As always, handle any potential errors:
       if (err) return res.status(500).send(err);
