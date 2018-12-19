@@ -1,6 +1,6 @@
 {
   "database":{
-    "url": "mongodb://192.168.0.118:27018/test",
+    "url": "mongodb://localhost:27018/test",
     "secret":"node"
   },
   "MODULE_KEY": "MODK:1bbe1f82-b1a7-45c5-aa9f-31c78542a45d",

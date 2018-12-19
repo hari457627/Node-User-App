@@ -15,7 +15,8 @@ var express     = require('express'),
     settings    = require('./config/settings');
 
 // mongoose.connect(config.get("database.url"), { useMongoClient: true });
-
+app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.json()) 
 var corsOptions = {
     origin: '*',
     optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
@@ -78,9 +79,7 @@ var make_response_as_global = function(req, res, next){
     next();
 };
 
-app.use(morgan('combined'));                       //logging
-app.use(bodyParser.json());                        //parsing request body
-app.use(bodyParser.urlencoded({ extended: true }));//parsing request queries
+app.use(morgan('combined'));                        
 app.use(make_response_as_global);
 app.use(token_route);
 app.use(cors(corsOptions));// Setting up request headers to support Angular applications

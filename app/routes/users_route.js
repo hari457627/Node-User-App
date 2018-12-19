@@ -4,6 +4,7 @@ var express  = require('express'),
     Address     = require('./../models/address'),
     bcrypt   = require('bcrypt');
 const saltRounds = 10;
+var file = require('../services/infra_service_localupload');
 // var AuthentService = require('../../idn/AuthValidation');
 
 router.route('/')
@@ -29,22 +30,30 @@ router.route('/signup')
 
 router.route('/:id')
     .get(function (request, response) {
-        console.log(request.params.id);
-        User.findOne({_id:request.params.id}).exec().then(function (user) {
-            response.json(user);
-        }).catch(function (error) {
-            response.status(500).json({error: error});
-        });
+      User.findOne({_id:request.params.id}).exec().then(function (user) {
+          response.json(user);
+      }).catch(function (error) {
+          response.status(500).json({error: error});
+      });
     })
 
-    .put(function(request, response) {
-        bcrypt.hash(request.body.password,saltRounds, function(err,hash){
-          User.findOneAndUpdate({_id:request.params.id},request.body,{new:true}).then(function (user) {
-            response.json(user);
-          }).catch(function (error) {
+    .post(file.public_folder.any(),function(request, response,next) {
+      bcrypt.hash(request.body.password,saltRounds, function(err,hash){
+          if(hash){
+            if(request.files){
+              request.body.profilePic = request.files[0].path;
+            }
+            request.body.password = hash;
+            User.findOneAndUpdate({_id:request.params.id},request.body,{new:true}).then(function (user) {
+              response.json(user);
+            }).catch(function (error) {
               response.json(error);
-          })
-        })  
+            })
+          }
+          else{
+              response.json(err); 
+          }
+      })  
     })
 
     .delete(function(req, res) {

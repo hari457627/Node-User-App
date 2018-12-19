@@ -19,7 +19,8 @@ var userSchema = new Schema({
                             return /\d{10}/.test(v);
                         },
                         message: '{VALUE} is not a valid phone number!'
-                }}
+                }},
+    profilePic:{type: String}
     })
     .set('toJSON',{
         virtuals: true,
