@@ -44,10 +44,8 @@ router.route('/login')
       response.status(400).json({message: "invalid user"});
      }
      else{
-       console.log(user);
         bcrypt.compare(request.body.password, user.password, function(err, resp) {
           if(resp == true){
-            console.log(resp);
             const token = Jwt.sign({
                 data: user._id
             }, config.get("database.secret"), {

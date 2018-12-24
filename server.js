@@ -86,8 +86,8 @@ app.use(cors())
 
 // Setting up request headers to support Angular applications
 // app.use(session({ secret: 'ilovescotchscotchyscotchscotch' })); // session secret
-// app.use(passport.initialize());
-// app.use(passport.session());
+app.use(passport.initialize());
+app.use(passport.session());
 
 
 // app.use(function timeLog (req, res, next) {
