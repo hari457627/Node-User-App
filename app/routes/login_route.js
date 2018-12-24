@@ -7,6 +7,7 @@ var Jwt = require('jsonwebtoken');
 var config = require('config');
 var async = require('async');
 var _ = require('lodash');
+var cors = require('cors');
 
 // var AuthentService = require('../../idn/AuthValidation');
 
@@ -23,7 +24,6 @@ function generateToken(user_id, cb) {
 
 router.route('/login')
 .post(function (request, response) {
-  
   if(request.body.username){
     request.body.username = request.body.username;
     request.body.email = null;
@@ -39,13 +39,15 @@ router.route('/login')
     request.body.email = null;
     request.body.mobile = request.body.mobile;
   }
-  User.findOne({$or:[{username: request.body.username},{email:request.body.email},{mobile:request.body.email}]}).exec().then(function (user) {
-     console.log(user);
+  User.findOne({$or:[{'username': request.body.username},{'email':request.body.email},{'mobile':request.body.email}]}).exec().then(function (user) {
      if(user == null){
       response.status(400).json({message: "invalid user"});
-     }else{
+     }
+     else{
+       console.log(user);
         bcrypt.compare(request.body.password, user.password, function(err, resp) {
           if(resp == true){
+            console.log(resp);
             const token = Jwt.sign({
                 data: user._id
             }, config.get("database.secret"), {

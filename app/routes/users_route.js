@@ -16,6 +16,16 @@ router.route('/')
       });
     })
 
+router.route('/fileupload')
+    .post(file.public_folder.any(),function(request, response,error) {
+      if(request.files[0]){
+        response.json(request.files[0]);
+      }
+      else{
+        response.json(error);
+      }
+    })
+
 router.route('/signup')
     .post(function(request, response) {
         bcrypt.hash(request.body.password,saltRounds, function(err,hash){
