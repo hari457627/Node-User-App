@@ -47,12 +47,10 @@ router.route('/:id')
       });
     })
 
-    .post(file.public_folder.any(),function(request, response,next) {
+    .put(function(request, response) {
+      console.log(request.body);
       bcrypt.hash(request.body.password,saltRounds, function(err,hash){
           if(hash){
-            if(request.files){
-              request.body.profilePic = request.files[0].path;
-            }
             request.body.password = hash;
             User.findOneAndUpdate({_id:request.params.id},request.body,{new:true}).then(function (user) {
               response.json(user);

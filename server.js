@@ -17,6 +17,7 @@ var express     = require('express'),
 // mongoose.connect(config.get("database.url"), { useMongoClient: true });
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json());
+app.use('images',express.static(path.resolve('./public/uploads')));
 // var corsOptions = {
 //     origin: '*',
 //     optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
@@ -35,7 +36,10 @@ mongoose.connect(config.get("database.url")).then(
 // route middleware to verify a token
 var token_route =function(req, res, next) {
     // check header or url parameters or post parameters for token
-    var token = req.body.token || req.query.token || req.headers['x-access-token'];
+    var token = req.body.token || req.query.token || req.headers['authorization'];
+    console.log(req.body);
+    console.log(req.url);
+    console.log('token',token);
     if(req.url == '/api/users/signup' || req.url == '/api/user/login' || req.url == '/api/users/fileupload' ){
         var tokenSignup = jwt.sign(req.body, config.get("database.secret"));
         jwt.verify(tokenSignup, config.get("database.secret"), function(err, decoded) {
@@ -50,6 +54,7 @@ var token_route =function(req, res, next) {
     }
     // decode token
     else if (token) {
+      console.log(token);
       // verifies secret and checks exp
       jwt.verify(token, config.get("database.secret"), function(err, decoded) {
         if (err) {
@@ -82,7 +87,7 @@ var make_response_as_global = function(req, res, next){
 app.use(morgan('combined'));                        
 app.use(make_response_as_global);
 app.use(token_route);
-app.use(cors())
+app.use(cors());
 
 // Setting up request headers to support Angular applications
 // app.use(session({ secret: 'ilovescotchscotchyscotchscotch' })); // session secret
