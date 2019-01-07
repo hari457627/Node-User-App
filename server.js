@@ -17,12 +17,17 @@ var express     = require('express'),
 // mongoose.connect(config.get("database.url"), { useMongoClient: true });
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json());
-app.use('images',express.static(path.resolve('./public/uploads')));
+app.use('/images',express.static(path.resolve('./public/uploads')));
 // var corsOptions = {
 //     origin: '*',
 //     optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
 // }
-
+app.all('*', function(req, res, next) {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'PUT, GET, POST, DELETE, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, X-Requested-With, Authorization');
+  next();
+});
 mongoose.connect(config.get("database.url")).then(
     () => { 
         console.log('connected'); 
@@ -37,10 +42,7 @@ mongoose.connect(config.get("database.url")).then(
 var token_route =function(req, res, next) {
     // check header or url parameters or post parameters for token
     var token = req.body.token || req.query.token || req.headers['authorization'];
-    console.log(req.body);
-    console.log(req.url);
-    console.log('token',token);
-    if(req.url == '/api/users/signup' || req.url == '/api/user/login' || req.url == '/api/users/fileupload' ){
+    if(req.url == '/api/users/signup' || req.url == '/api/user/login' || req.url == '/api/users/fileupload' || req.url.includes('/images')){
         var tokenSignup = jwt.sign(req.body, config.get("database.secret"));
         jwt.verify(tokenSignup, config.get("database.secret"), function(err, decoded) {
             if (err) {
@@ -112,12 +114,7 @@ app.use(passport.session());
 // app.use(settings.headers); 
 
 // Setting up resquest headers to support Angular applications
-app.all('*', function(req, res, next) {
-    res.header('Access-Control-Allow-Origin', '*');
-    res.header('Access-Control-Allow-Methods', 'PUT, GET, POST, DELETE, OPTIONS');
-    res.header('Access-Control-Allow-Headers', 'Content-Type, X-Requested-With, Authorization');
-    next();
-});
+
 
 app.use('/api/users/', User_Route);//including routes to application
 app.use('/api/users/address', Address_Route);//including routes to application
