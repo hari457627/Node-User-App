@@ -88,7 +88,7 @@ var make_response_as_global = function(req, res, next){
 
 app.use(morgan('combined'));                        
 app.use(make_response_as_global);
-app.use(token_route);
+// app.use(token_route);
 app.use(cors());
 
 // Setting up request headers to support Angular applications
