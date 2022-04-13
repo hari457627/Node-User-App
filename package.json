@@ -5,7 +5,7 @@
     "code_quality": "plato -r -d reports/plato app server.js"
   },
   "dependencies": {
-    "async": "2.6.1",
+    "async": "3.2.2",
     "bcrypt": "^3.0.2",
     "body-parser": "^1.0.2",
     "config": "^1.28.1",
